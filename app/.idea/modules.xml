@@ -3,7 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file:///private/tmp/android-projects/AsyncReactiveXDemo/AsyncReactiveXDemo.iml" filepath="/private/tmp/android-projects/AsyncReactiveXDemo/AsyncReactiveXDemo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app.iml" filepath="$PROJECT_DIR$/app.iml" />
       <module fileurl="file:///private/tmp/android-projects/AsyncReactiveXDemo/app/app.iml" filepath="/private/tmp/android-projects/AsyncReactiveXDemo/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app-app.iml" filepath="$PROJECT_DIR$/app/app-app.iml" />
     </modules>
   </component>
 </project>
