@@ -1,0 +1,51 @@
+{\rtf1\ansi\uc0\deff0{\fonttbl{\f0\fmodern\fprq1\fcharset0;}}{\colortbl;\red136\green136\blue136;\red186\green33\blue33;\red0\green68\blue221;\red102\green102\blue102;\red64\green128\blue128;\red160\green160\blue0;\red25\green23\blue124;\red0\green128\blue0;\red187\green102\blue136;\red187\green102\blue34;\red136\green0\blue0;\red170\green34\blue255;\red153\green153\blue153;\red0\green160\blue0;\red160\green0\blue0;\red255\green0\blue0;\red128\green0\blue128;\red176\green0\blue64;\red0\green0\blue255;\red187\green187\blue187;\red188\green122\blue0;\red0\green0\blue128;\red125\green144\blue41;\red210\green65\blue58;}\f0 {\cf8\b package} {\cf19\b com.minkov.demos.httpdemos}{\cf4 ;}\par
+\par
+{\cf8\b import} {\cf19\b android.support.v7.app.AppCompatActivity}{\cf4 ;}\par
+{\cf8\b import} {\cf19\b android.os.Bundle}{\cf4 ;}\par
+{\cf8\b import} {\cf19\b android.widget.Toast}{\cf4 ;}\par
+\par
+{\cf8\b import} {\cf19\b io.reactivex.ObservableSource}{\cf4 ;}\par
+{\cf8\b import} {\cf19\b io.reactivex.Scheduler}{\cf4 ;}\par
+{\cf8\b import} {\cf19\b io.reactivex.android.schedulers.AndroidSchedulers}{\cf4 ;}\par
+{\cf8\b import} {\cf19\b io.reactivex.annotations.NonNull}{\cf4 ;}\par
+{\cf8\b import} {\cf19\b io.reactivex.functions.Consumer}{\cf4 ;}\par
+{\cf8\b import} {\cf19\b io.reactivex.functions.Function}{\cf4 ;}\par
+{\cf8\b import} {\cf19\b io.reactivex.schedulers.Schedulers}{\cf4 ;}\par
+\par
+{\cf8\b public} {\cf8\b class} {\cf19\b HttpActivity} {\cf8\b extends} AppCompatActivity {\cf4 \{}\par
+\par
+    {\cf8\b private} HttpRequester mHttpRequester{\cf4 ;}\par
+\par
+    {\cf12 @Override}\par
+    {\cf8\b protected} {\cf18 void} {\cf19 onCreate}{\cf4 (}Bundle savedInstanceState{\cf4 )} {\cf4 \{}\par
+        {\cf8\b super}{\cf4 .}{\cf23 onCreate}{\cf4 (}savedInstanceState{\cf4 )}{\cf4 ;}\par
+        setContentView{\cf4 (}R{\cf4 .}{\cf23 layout}{\cf4 .}{\cf23 activity_http}{\cf4 )}{\cf4 ;}\par
+        mHttpRequester {\cf4 =} {\cf8\b new} HttpRequester{\cf4 (}{\cf4 )}{\cf4 ;}\par
+\par
+        load{\cf4 (}{\cf4 )}{\cf4 ;}\par
+    {\cf4 \}}\par
+\par
+    {\cf8\b private} {\cf18 void} {\cf19 load}{\cf4 (}{\cf4 )} {\cf4 \{}\par
+        {\cf8\b final} String URL {\cf4 =} {\cf2 ""}{\cf4 ;}\par
+        String body {\cf4 =} {\cf2 ""}{\cf4 ;}\par
+\par
+        mHttpRequester{\cf4 .}{\cf23 post}{\cf4 (}URL{\cf4 ,} body{\cf4 )}\par
+                {\cf4 .}{\cf23 switchMap}{\cf4 (}result {\cf4 -}{\cf4 >} mHttpRequester{\cf4 .}{\cf23 get}{\cf4 (}URL{\cf4 )}{\cf4 )}\par
+                {\cf4 .}{\cf23 subscribeOn}{\cf4 (}Schedulers{\cf4 .}{\cf23 io}{\cf4 (}{\cf4 )}{\cf4 )}\par
+                {\cf4 .}{\cf23 observeOn}{\cf4 (}AndroidSchedulers{\cf4 .}{\cf23 mainThread}{\cf4 (}{\cf4 )}{\cf4 )}\par
+                {\cf4 .}{\cf23 subscribe}{\cf4 (}result {\cf4 -}{\cf4 >}\par
+                        Toast{\cf4 .}{\cf23 makeText}{\cf4 (}HttpActivity{\cf4 .}{\cf23 this}{\cf4 ,} {\cf2 "Item created!"}{\cf4 ,} Toast{\cf4 .}{\cf23 LENGTH_SHORT}{\cf4 )}\par
+                             {\cf4 .}{\cf23 show}{\cf4 (}{\cf4 )}{\cf4 )}{\cf4 ;}\par
+\par
+        mHttpRequester{\cf4 .}{\cf23 get}{\cf4 (}URL{\cf4 )}\par
+                {\cf4 .}{\cf23 subscribeOn}{\cf4 (}Schedulers{\cf4 .}{\cf23 io}{\cf4 (}{\cf4 )}{\cf4 )}\par
+                {\cf4 .}{\cf23 observeOn}{\cf4 (}AndroidSchedulers{\cf4 .}{\cf23 mainThread}{\cf4 (}{\cf4 )}{\cf4 )}\par
+                {\cf4 .}{\cf23 subscribe}{\cf4 (}{\cf8\b new} Consumer{\cf4 <}String{\cf4 >}{\cf4 (}{\cf4 )} {\cf4 \{}\par
+                    {\cf12 @Override}\par
+                    {\cf8\b public} {\cf18 void} {\cf19 accept}{\cf4 (}String body{\cf4 )} {\cf8\b throws} Exception {\cf4 \{}\par
+                        {\cf5\i // parse body...\par
+}                    {\cf4 \}}\par
+                {\cf4 \}}{\cf4 )}{\cf4 ;}\par
+    {\cf4 \}}\par
+{\cf4 \}}\par
+}

@@ -1,14 +1,17 @@
 {
-  "name": "api",
+  "name": "web-server",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "devDependencies": {},
   "dependencies": {
-    "body-parser": "^1.18.2",
-    "express": "^4.16.2",
-    "mongodb": "^2.2.33"
-  },
-  "devDependencies": {
-    "eslint-config-google": "^0.9.1"
+    "babel-polyfill": "^6.26.0",
+    "babel-register": "^6.26.0",
+    "body-parser": "^1.18.1",
+    "koa": "^2.3.0",
+    "koa-bodyparser": "^4.2.0",
+    "koa-morgan": "^1.0.1",
+    "koa-router": "^7.2.1",
+    "mongodb": "^2.2.31"
   }
 }

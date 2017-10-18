@@ -1,7 +1,11 @@
-const mongodb = require('mongodb');
+const {
+    MongoClient,
+} = require('mongodb');
 
-const init = (connectionString) => {
-    return mongodb.connect(connectionString);
+const init = async(connectionString) => {
+    return MongoClient.connect(connectionString);
 };
 
-module.exports = { init };
+module.exports = {
+    init,
+};

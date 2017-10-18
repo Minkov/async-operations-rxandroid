@@ -1,31 +1,40 @@
 const { ObjectID } = require('mongodb');
+
 class Data {
-    constructor(db, Klass) {
+    constructor(db, ModelClass) {
         this.db = db;
-        this.Klass = Klass;
-        this.collection = db.collection(this.getCollectioName(Klass));
+        this.ModelClass = ModelClass;
+        this.collectionName = this._getCollectionName();
+        this.collection = this.db.collection(this.collectionName);
     }
 
-    getCollectioName(Klass) {
-        return Klass.name.toLowerCase() + 's';
-    }
-
-    async create(obj) {
-        await this.collection.insert(obj);
-        return obj;
+    _getCollectionName() {
+        return this.ModelClass.name.toLowerCase() + 's';
     }
 
     async getAll() {
-        const items = await this.collection.find().toArray();
-        return items;
+        const models = await this.collection.find()
+            .toArray();
+        return models.map(this.ModelClass.toViewModel);
+        return models;
+    }
+
+    async create(model) {
+        await this.collection.insert(model);
+        return model;
     }
 
     async getById(id) {
-        const item = await this.collection.findOne({
+        const model = this.collection.findOne({
             _id: new ObjectID(id),
         });
-        return item;
+
+        return model;
     }
+}
+
+class LocalData {
+
 }
 
 class DataProvider {
@@ -34,17 +43,17 @@ class DataProvider {
         this.datas = {};
     }
 
-    get(Klass) {
-        if (typeof this.datas[Klass.name] === 'undefined') {
-            this.datas[Klass.name] = new Data(this.db, Klass);
+    getFor(ModelClass) {
+        if (typeof (this.datas[ModelClass.name]) === 'undefined') {
+            this.datas[ModelClass.name] = new Data(this.db, ModelClass);
         }
 
-        return this.datas[Klass.name];
+        return this.datas[ModelClass.name];
     }
 }
 
-const init = (db) => {
+const init = async (db) => {
     return new DataProvider(db);
 };
 
-module.exports = { init };
+module.exports = { init, };

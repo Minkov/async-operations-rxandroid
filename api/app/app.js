@@ -1,26 +1,72 @@
-const express = require('express');
-const Book = require('../models/book');
+const fs = require('fs');
 
-const init = (data) => {
-    const app = express();
-    require('./config').setup(app);
+const Koa = require('koa');
+const Router = require('koa-router');
+const bodyParser = require('koa-bodyparser');
+const morgan = require('koa-morgan');
 
-    const booksRouter = require('./routers/books').init(data.get(Book));
+const Book = require('../models/book.model')
+const { wait } = require('../utils/wait');
 
-    const apiRouter = new express.Router();
-    apiRouter.use('/books', booksRouter);
+const init = (dataProvider) => {
+    const app = new Koa();
 
-    app.use('/api', apiRouter);
+    const booksRouter = new Router({
+        prefix: "/books"
+    });
+
+    const booksData = dataProvider.getFor(Book);
+
+    booksRouter
+        .get('/', async (ctx, next) => {
+            await wait(2);
+            const books = await booksData.getAll();
+
+            ctx.body = books;
+            ctx.status = 200;
+
+            await next();
+        })
+        .get('/:id', async(ctx, next) => {
+            await wait(1);
+            const book = await booksData.getById(ctx.params.id);
+            ctx.body = book;
+            ctx.status = 200;
+
+            await next();
+        })
+        .post('/', async (ctx, next) => {
+            console.log(ctx.request.body);
+            const book = await booksData.create(ctx.request.body);
+            ctx.status = 201;
+            ctx.body = book;
+            await next();
+        });
+
+    const router = new Router({
+        prefix: "/api",
+    });
+
+    router.use(booksRouter.routes())
+
+    const accessLogStream = fs.createWriteStream(__dirname + '/access.log',
+        { flags: 'a' });
+
+    app
+        .use(morgan('combined', { stream: accessLogStream }))
+        .use(bodyParser())
+        .use(router.routes())
+        .use(router.allowedMethods());
 
     return {
-        run(port) {
+        start(port) {
             return new Promise((resolve) => {
-                app.listen(port, () => {
-                    resolve();
-                });
+                app.listen(port, resolve);
             });
         },
     };
 };
 
-module.exports = { init };
+module.exports = {
+    init,
+};
