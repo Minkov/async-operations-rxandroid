@@ -2,6 +2,7 @@ package com.minkov.demos.asyncreactivexdemo.repos.base;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 
 /**
@@ -11,7 +12,7 @@ import io.reactivex.Observable;
 public interface BaseRepository<T> {
     void getWithAsyncTask(OnDataReceivedListener<T> listener);
 
-    Observable<List<T>> getWithObservable();
+    Flowable<List<T>> getWithObservable();
 
     interface OnDataReceivedListener<T> {
         void onSuccess(List<T> list);

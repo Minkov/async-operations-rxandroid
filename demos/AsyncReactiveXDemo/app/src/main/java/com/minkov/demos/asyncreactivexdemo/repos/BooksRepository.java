@@ -8,9 +8,10 @@ import com.minkov.demos.asyncreactivexdemo.services.BooksService;
 
 import java.util.List;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
+import io.reactivex.FlowableEmitter;
+import io.reactivex.FlowableOnSubscribe;
 import io.reactivex.annotations.NonNull;
 
 /**
@@ -45,16 +46,17 @@ public class BooksRepository implements BaseRepository<Book> {
     }
 
     @Override
-    public Observable<List<Book>> getWithObservable() {
-        return Observable.create(new ObservableOnSubscribe<List<Book>>() {
+    public Flowable<List<Book>> getWithObservable() {
+
+        return Flowable.create(new FlowableOnSubscribe<List<Book>>() {
             @Override
-            public void subscribe(@NonNull ObservableEmitter<List<Book>> e) throws Exception {
+            public void subscribe(@NonNull FlowableEmitter<List<Book>> e) throws Exception {
                 List<Book> list = mService.listBooks()
                         .execute()
                         .body();
                 e.onNext(list);
                 e.onComplete();
             }
-        });
+        }, BackpressureStrategy.BUFFER);
     }
 }

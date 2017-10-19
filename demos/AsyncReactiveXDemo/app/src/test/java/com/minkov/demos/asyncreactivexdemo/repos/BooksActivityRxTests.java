@@ -3,7 +3,6 @@ package com.minkov.demos.asyncreactivexdemo.repos;
 import com.minkov.demos.asyncreactivexdemo.models.Book;
 import com.minkov.demos.asyncreactivexdemo.services.BooksService;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -13,8 +12,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subscribers.TestSubscriber;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -50,18 +48,11 @@ public class BooksActivityRxTests {
 
     @Test
     public void when_books_available_show_return_books() throws InterruptedException {
+        TestSubscriber subscriber = new TestSubscriber();
         repository.getWithObservable()
-                .subscribeOn(Schedulers.trampoline())
-                .observeOn(Schedulers.trampoline())
-                .subscribe(new Consumer<List<Book>>() {
-                    @Override
-                    public void accept(List<Book> books) throws Exception {
-                        Assert.assertEquals(mBooks.size(), books.size() + 1);
-                        for (int i = 0; i < mBooks.size(); i++) {
-                            Assert.assertEquals(mBooks.get(i), books.get(i));
-                        }
-                    }
-                });
+                .subscribe(subscriber);
+
+        subscriber.assertValue(mBooks);
     }
 
 }
